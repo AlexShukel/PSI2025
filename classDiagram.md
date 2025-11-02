@@ -29,7 +29,7 @@ classDiagram
     }
 
     %% ============================
-    %% 2. Classes Strongly Related to Tutor
+    %% 2. Classes Related to Tutor & Subjects
     %% ============================
     class TutorApplication {
         applicationDetails
@@ -37,10 +37,16 @@ classDiagram
         submittedAt
     }
 
-    class AvailabilitySlot {
+    class AvailabilityTemplateSlot {
         dayOfWeek
         startTime
         endTime
+    }
+
+    class TutorAvailabilitySlot {
+        startTime
+        endTime
+        status
     }
 
     class TeachingOffer {
@@ -49,6 +55,7 @@ classDiagram
 
     class Subject {
         name
+        gradeLevel
     }
 
     %% ============================
@@ -59,7 +66,6 @@ classDiagram
         endTime
         status
         googleMeetLink
-        priceInCredits
     }
 
     class Review {
@@ -75,6 +81,7 @@ classDiagram
         amount
         type
         status
+        createdAt
     }
 
     class LearningMaterial {
@@ -88,36 +95,42 @@ classDiagram
       startTime
       endTime
       maxAttendees
+      priceInCredits
     }
 
     %% ============================
     %%       RELATIONSHIPS
     %% ============================
 
-    %% ' -- Inheritance --
+    %% Inheritance
     User <|-- Student
     User <|-- Tutor
     User <|-- Administrator
 
-    %% ' -- Composition (Strong "is-composed-of") --
-    Reservation "1" *-- "0..1" Review : creates
-    Student "1" *-- "0..*" Transaction : initiates
-    Tutor "1" *-- "1..*" AvailabilitySlot : defines
-
-    %% ' -- Aggregation (Weak "has-a") --
-    Tutor "1" o-- "0..*" LearningMaterial : creates
-    Tutor "1" o-- "0..*" GroupLesson : organizes
-
-    %% ' -- Association (General "uses" relationship) --
-    Student "1" -- "0..*" Reservation : books
-    Tutor "1" -- "0..*" Reservation : provides
-
-    Student "1" -- "0..*" GroupLesson : registers
-
-    Tutor "1" -- "1" TutorApplication : submits
+    %% Associations
+    User "1" -- "1" TutorApplication : submits
     Administrator "1" -- "0..*" TutorApplication : reviews
 
-    %% ' -- Association Class Connection --
-    Tutor "1" -- "1..*" TeachingOffer : sets price for
-    Subject "1" -- "1..*" TeachingOffer
+    Tutor "1" -- "1" AvailabilityTemplateSlot : sets weekly template
+    Tutor "1" -- "0..*" TutorAvailabilitySlot : owns generated
+
+    Tutor "1" -- "1..*" TeachingOffer : sets
+    Subject "1" -- "0..*" TeachingOffer : is offered as
+
+    Student "1" -- "0..*" Reservation : books
+    Tutor "1" -- "0..*" Reservation : provides
+    TutorAvailabilitySlot "1" -- "0..1" Reservation : is booked for
+    TeachingOffer "1" -- "0..*" Reservation : defines subject and price for
+
+    Reservation "1" -- "0..1" Review : is reviewed with
+    Student "1" -- "0..*" Review : writes
+
+    Student "1" -- "0..*" Transaction : initiates
+
+    Tutor "1" -- "0..*" LearningMaterial : creates
+    Reservation "0..*" -- "0..*" LearningMaterial : has
+    GroupLesson "0..*" -- "0..*" LearningMaterial : has
+
+    Tutor "1" -- "0..*" GroupLesson : organizes
+    Student "*" -- "*" GroupLesson : registers for
 ```
