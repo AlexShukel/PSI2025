@@ -1,64 +1,61 @@
-```mermaid
-graph TD
-    %% 1. Aktorių (Actors) apibrėžimas su &laquo; &raquo; HTML esybėmis
-    Anon["&laquo;actor&raquo;<br>Neprisijungęs vartotojas"]
-    LoggedInUser["&laquo;actor&raquo;<br>Prisijungęs vartotojas"]
-    Student["&laquo;actor&raquo;<br>Mokinys"]
-    Tutor["&laquo;actor&raquo;<br>Korepetitorius"]
-    Admin["&laquo;actor&raquo;<br>Administratorius"]
+@startuml
+left to right direction
+' ----- actors -----
+actor "Unauthenticated user" as Anon
+actor "Authenticated user"   as LoggedInUser
+actor "Student"              as Student   
+actor "Tutor"                as Tutor     
+actor "Administrator"        as Admin   
 
-    %% 2. Aktorių hierarchijos (Generalization) apibrėžimas
-    LoggedInUser --> Student
-    LoggedInUser --> Tutor
-    LoggedInUser --> Admin
+' ----- hierarchy -----
+LoggedInUser <|-- Student
+LoggedInUser <|-- Tutor
+LoggedInUser <|-- Admin
 
-    %% 3. Sistemos ribų (System Boundary) apibrėžimas
-    subgraph "KOPUS"
-        %% Naudojimo atvejai (Use Cases) kaip suapvalinti stačiakampiai, naudojant (...) sintaksę
-        uc_Login("(Prisijungti)")
-        uc_RegisterStudent("(Registruotis mokiniu)")
-        uc_ApplyTutor("(Pateikti korepetitoriaus paraišką)")
-        uc_SearchTutors("(Ieškoti ir peržiūrėti korepetitorius)")
-        uc_Logout("(Atsijungti)")
-        uc_ManageOwnProfile("(Valdyti savo profilį)")
-        uc_ReserveLesson("(Rezervuoti pamoką)")
-        uc_LeaveReview("(Palikti atsiliepimą)")
-        uc_BuyCredits("(Įsigyti kreditų)")
-        uc_RegisterGroupLesson("(Registruotis į grupinę pamoką)")
-        uc_ManageReservations("(Valdyti rezervacijas)")
-        uc_ManageCalendar("(Valdyti užimtumo kalendorių)")
-        uc_ManageMaterials("(Valdyti mokymosi medžiagą)")
-        uc_CreateGroupLesson("(Kurti grupines pamokas)")
-        uc_ManageUsers("(Valdyti vartotojus)")
-        uc_ManageApplications("(Valdyti korepetitorių paraiškas)")
-        uc_ManageSubjects("(Valdyti mokomuosius dalykus)")
-    end
+' ----- system boundary -----
+rectangle KOPUS {
+usecase (Login)                              as UC_LOGIN
+usecase (Register as student)                as UC_REG_ST
+usecase (Submit tutor application)           as UC_APP_TUT
+usecase (Search and view tutors)           as UC_SEARCH
+usecase (Logout)                             as UC_LOGOUT
+usecase (Manage own profile)                 as UC_PROF
+usecase (Book a lesson)                      as UC_RES
+usecase (Leave feedback)                     as UC_REV
+usecase (Buy credits)                     as UC_CRED
+usecase (Register for group lesson)        as UC_GRP_REG
+usecase (Manage reservations)                 as UC_MAN_RES
+usecase (Manage availability calendar)       as UC_CAL
+usecase (Manage learning material)          as UC_MAT
+usecase (Create group lessons)              as UC_GRP_CRT
+usecase (Manage users)                      as UC_MAN_USR
+usecase (Manage tutor applications)        as UC_MAN_APP
+usecase (Manage subjects)                  as UC_MAN_SUB
+usecase (Reset password)                 as UC_RST_PWD
+}
 
-    %% 4. Ryšių tarp aktorių ir naudojimo atvejų apibrėžimas
-    Anon --> uc_Login
-    Anon --> uc_RegisterStudent
-    Anon --> uc_ApplyTutor
-    Anon --> uc_SearchTutors
+' ----- associations -----
+Anon        --> UC_LOGIN
+Anon        --> UC_REG_ST
+Anon        --> UC_APP_TUT
+Anon        --> UC_SEARCH
+Anon        --> UC_RST_PWD
+LoggedInUser --> UC_LOGOUT
+LoggedInUser --> UC_PROF
+LoggedInUser --> UC_SEARCH
+Student     --> UC_RES
+Student     --> UC_REV
+Student     --> UC_CRED
+Student     --> UC_GRP_REG
+Tutor       --> UC_MAN_RES
+Tutor       --> UC_CAL
+Tutor       --> UC_MAT
+Tutor       --> UC_GRP_CRT
+Admin       --> UC_MAN_USR
+Admin       --> UC_MAN_APP
+Admin       --> UC_MAN_SUB
 
-    LoggedInUser --> uc_Logout
-    LoggedInUser --> uc_ManageOwnProfile
+' ----- extend / include -----
 
-    Student --> uc_SearchTutors
-    Student --> uc_ReserveLesson
-    Student --> uc_LeaveReview
-    Student --> uc_BuyCredits
-    Student --> uc_RegisterGroupLesson
 
-    Tutor --> uc_ManageReservations
-    Tutor --> uc_ManageCalendar
-    Tutor --> uc_ManageMaterials
-    Tutor --> uc_CreateGroupLesson
-
-    Admin --> uc_ManageUsers
-    Admin --> uc_ManageApplications
-    Admin --> uc_ManageSubjects
-
-    %% 5. <<extend>> ir <<include>> ryšių apibrėžimas su HTML esybėmis
-    uc_SearchTutors -.->|"&laquo;extend&raquo;"| uc_ReserveLesson
-    uc_ReserveLesson -.->|"&laquo;include&raquo;"| uc_BuyCredits
-```
+@enduml
