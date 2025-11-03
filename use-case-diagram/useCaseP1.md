@@ -17,7 +17,7 @@ Anon --> UC_REG_ST
 Anon --> UC_APP_TUT
 Anon --> UC_RST_PWD
 
-UC_LOGIN ..> UC_EXT_AUTH : <<include>>
+UC_LOGIN ..> UC_EXT_AUTH : <<extend>>
 
 
 @enduml

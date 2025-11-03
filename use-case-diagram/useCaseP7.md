@@ -11,6 +11,6 @@ rectangle "Reviews" {
 
 Student --> UC_REV
 
-UC_REV ..> UC_COMMENT : <<include>>
+UC_REV ..> UC_COMMENT : <<extend>>
 
 @enduml
