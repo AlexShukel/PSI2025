@@ -1,6 +1,7 @@
 @startuml Reviews_Feedback
 left to right direction
 skinparam packageStyle rectangle
+skinparam monochrome true
 
 actor "Student" as Student
 
@@ -9,8 +10,8 @@ rectangle "Reviews" {
   usecase (Write comment) as UC_COMMENT
 }
 
-Student --> UC_REV
+Student -- UC_REV
 
-UC_REV ..> UC_COMMENT : <<extend>>
+UC_REV <.. UC_COMMENT : <<extend>>
 
 @enduml
